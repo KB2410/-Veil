@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Veil Feedback — Private by default</title><link rel="stylesheet" href="styles.css"></head>
+<body>
+  <header><a class="brand" href="#top"><span>◐</span> VEIL / FEEDBACK</a><span class="network">● Midnight testnet ready</span></header>
+  <main id="top">
+    <section class="hero"><p class="eyebrow">ANONYMOUS FEEDBACK · SELECTIVE DISCLOSURE</p><h1>Speak freely.<br><i>Prove</i> you belong.</h1><p class="lede">A private survey for verified community members. Your answer and identity never appear on the public ledger.</p><div class="chips"><span>✓ Eligibility proven</span><span>✓ One response only</span><span>✓ Answers encrypted</span></div></section>
+    <section class="grid">
+      <form id="survey" class="card" novalidate>
+        <div class="section-title"><span>01 / PRIVATE INPUT</span><b>Your response</b></div>
+        <label>How useful was this experience?</label><div class="rating" role="radiogroup" aria-label="Rating">
+          <input id="r1" name="rating" type="radio" value="1"><label for="r1">1</label><input id="r2" name="rating" type="radio" value="2"><label for="r2">2</label><input id="r3" name="rating" type="radio" value="3"><label for="r3">3</label><input id="r4" name="rating" type="radio" value="4"><label for="r4">4</label><input id="r5" name="rating" type="radio" value="5"><label for="r5">5</label></div>
+        <label for="response">What should we improve?</label><textarea id="response" maxlength="280" placeholder="Your private response stays encrypted…"></textarea>
+        <div class="section-title second"><span>02 / LOCAL PROOF</span><b>Private credential</b></div>
+        <label for="secret">Credential (never leaves this device)</label><input id="secret" type="password" minlength="12" placeholder="Enter your private credential"><p class="hint">We derive a zero-knowledge proof and one-time nullifier locally.</p>
+        <button type="submit">Create proof & submit <span>→</span></button><p id="status" role="status"></p>
+      </form>
+      <aside class="card transparency"><div class="section-title"><span>PUBLIC VIEW</span><b>Survey results</b></div><div class="metric"><strong id="total">0</strong><span>verified responses</span></div><div class="metric"><strong id="average">—</strong><span>average rating</span></div><div class="bars" id="bars"></div><div class="ledger"><span>Public ledger sees</span><code>valid proof · nullifier · tally</code><span>Public ledger never sees</span><code class="private">identity · credential · response</code></div></aside>
+    </section>
+    <section class="privacy"><div><p class="eyebrow">THE PRIVACY MODEL</p><h2>Half light. Half shadow.</h2></div><p>Veil Feedback discloses only the facts a survey needs: a valid member participated, and that member has not responded before. The response remains private to its intended recipient.</p></section>
+  </main><footer>Built for Midnight Level 3 · Anonymous Feedback / Survey</footer><script type="module" src="app.js"></script>
+</body></html>
