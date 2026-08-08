@@ -37,7 +37,7 @@ The production flow has three pieces:
 2. The participant’s Compact circuit proves membership and creates a survey-specific nullifier. The secret credential remains client-side.
 3. The contract verifies the proof, rejects a reused nullifier, and releases only an aggregate tally. Encrypted response data is readable only by its intended recipient.
 
-This repository ships a browser-executable protocol simulator so the full interaction can be tried without a testnet account. `src/protocol.js` deliberately labels the integration boundary: replace `hashProof` with a Compact witness/proof and submit it through the deployed Midnight contract before production. The public data shape and verification rules are already isolated and tested.
+This repository ships a browser-executable protocol simulator so the full interaction can be tried without a testnet account. The matching Compact source is now included in [`contracts/veil_feedback.compact`](contracts/veil_feedback.compact): it uses private credential witnesses, one-way membership commitments, survey-scoped nullifiers, and aggregate counters. Install the Midnight toolchain, compile it, and connect its generated client to replace the local adapter before deployment. The public data shape and verification rules are already isolated and tested.
 
 ## Architecture
 

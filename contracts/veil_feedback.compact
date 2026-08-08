@@ -1,0 +1,72 @@
+pragma language_version 0.23;
+
+import CompactStandardLibrary;
+
+// Veil Feedback: anonymous, one-response-per-credential survey.
+// Credentials remain witnesses; only commitments, nullifiers and aggregates are persistent.
+
+export sealed ledger organizer: Bytes<32>;
+export ledger surveyOpen: Boolean;
+export ledger eligibleCommitments: Set<Bytes<32>>;
+export ledger usedNullifiers: Set<Bytes<32>>;
+export ledger ratingOne: Counter;
+export ledger ratingTwo: Counter;
+export ledger ratingThree: Counter;
+export ledger ratingFour: Counter;
+export ledger ratingFive: Counter;
+
+witness localSecret(): Bytes<32>;
+witness credential(): Bytes<32>;
+
+constructor() {
+  organizer = disclose(dappPublicKey(localSecret()));
+  surveyOpen = true;
+}
+
+// The issuer registers a one-way commitment, not a wallet address or identity.
+export circuit addEligible(commitment: Bytes<32>): [] {
+  assert(dappPublicKey(localSecret()) == organizer, "Only the issuer can add credentials");
+  assert(!eligibleCommitments.member(disclose(commitment)), "Credential is already eligible");
+  eligibleCommitments.insert(disclose(commitment));
+}
+
+export circuit closeSurvey(): [] {
+  assert(dappPublicKey(localSecret()) == organizer, "Only the issuer can close the survey");
+  surveyOpen = false;
+}
+
+// Rating is a private witness. The one chosen aggregate counter changes as a proof effect.
+export circuit submit(rating: Uint<16>): [] {
+  const secret = credential();
+  const commitment = credentialCommitment(secret);
+  const nullifier = surveyNullifier(secret);
+  const disclosedRating = disclose(rating);
+
+  assert(surveyOpen, "Survey is closed");
+  assert(eligibleCommitments.member(commitment), "Credential is not eligible");
+  assert(!usedNullifiers.member(nullifier), "Credential has already responded");
+  assert(disclosedRating > 0 && disclosedRating < 6, "Rating must be between one and five");
+
+  usedNullifiers.insert(nullifier);
+  if (disclosedRating == 1) { ratingOne.increment(1); }
+  if (disclosedRating == 2) { ratingTwo.increment(1); }
+  if (disclosedRating == 3) { ratingThree.increment(1); }
+  if (disclosedRating == 4) { ratingFour.increment(1); }
+  if (disclosedRating == 5) { ratingFive.increment(1); }
+}
+
+export circuit getTallies(): Vector<5, Uint<64>> {
+  return [ratingOne, ratingTwo, ratingThree, ratingFour, ratingFive];
+}
+
+circuit dappPublicKey(secret: Bytes<32>): Bytes<32> {
+  return persistentHash<Vector<2, Bytes<32>>>([pad(32, "veil-feedback:issuer:"), secret]);
+}
+
+circuit credentialCommitment(secret: Bytes<32>): Bytes<32> {
+  return persistentHash<Vector<2, Bytes<32>>>([pad(32, "veil-feedback:member:"), secret]);
+}
+
+circuit surveyNullifier(secret: Bytes<32>): Bytes<32> {
+  return persistentHash<Vector<2, Bytes<32>>>([pad(32, "veil-feedback:nullifier:v1:"), secret]);
+}
