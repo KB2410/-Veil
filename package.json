@@ -1,0 +1,13 @@
+{
+  "name": "veil-feedback",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "test:coverage": "node --test",
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "engines": { "node": ">=20" }
+}
