@@ -38,8 +38,8 @@ export circuit closeSurvey(): [] {
 // Rating is a private witness. The one chosen aggregate counter changes as a proof effect.
 export circuit submit(rating: Uint<16>): [] {
   const secret = credential();
-  const commitment = credentialCommitment(secret);
-  const nullifier = surveyNullifier(secret);
+  const commitment = disclose(credentialCommitment(secret));
+  const nullifier = disclose(surveyNullifier(secret));
   const disclosedRating = disclose(rating);
 
   assert(surveyOpen, "Survey is closed");
