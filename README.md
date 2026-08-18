@@ -12,7 +12,7 @@
 
 | Network  | Address                          |
 |----------|----------------------------------|
-| Preprod  | [PASTE YOUR CONTRACT ADDRESS]    |
+| Preprod  | 0x518a3fbf7cd32405e5eccbc52e612bf7bcb428ca4e29574d5209fd554ea45b8f |
 
 ## What This Does
 
