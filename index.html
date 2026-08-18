@@ -12,7 +12,7 @@
         <label for="response">What should we improve?</label><textarea id="response" maxlength="280" placeholder="Your private response stays encrypted…"></textarea>
         <div class="section-title second"><span>02 / LOCAL PROOF</span><b>Private credential</b></div>
         <label for="secret">Credential (never leaves this device)</label><input id="secret" type="password" minlength="12" placeholder="Enter your private credential"><p class="hint">We derive a zero-knowledge proof and one-time nullifier locally.</p>
-        <button type="submit">Create proof & submit <span>→</span></button><p id="status" role="status"></p>
+        <button type="submit">Create proof & submit <span>→</span></button><p id="status" role="status" aria-live="polite"></p>
       </form>
       <aside class="card transparency"><div class="section-title"><span>PUBLIC VIEW</span><b>Survey results</b></div><div class="metric"><strong id="total">0</strong><span>verified responses</span></div><div class="metric"><strong id="average">—</strong><span>average rating</span></div><div class="bars" id="bars"></div><div class="ledger"><span>Public ledger sees</span><code>valid proof · nullifier · tally</code><span>Public ledger never sees</span><code class="private">identity · credential · response</code></div></aside>
     </section>
