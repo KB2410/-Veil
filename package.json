@@ -7,7 +7,15 @@
     "test": "node --test",
     "test:coverage": "node --test",
     "dev": "node server.js",
+    "deploy": "node scripts/deploy.js",
     "start": "node server.js"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@midnight-ntwrk/compact-runtime": "^0.16.0",
+    "@midnight-ntwrk/midnight-js-contracts": "^4.1.1",
+    "@midnight-ntwrk/midnight-js-types": "^4.1.1"
+  }
 }
