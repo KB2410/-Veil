@@ -10,7 +10,7 @@
 
 ## Demo Video
 
-![Veil Feedback Demo](assets/demo.webp)
+![Veil Feedback Demo](assets/veil_demo_video.webp)
 
 > **Walkthrough:** 1-minute end-to-end demo showing private feedback submission, animated zero-knowledge proof derivation, on-chain aggregate tally update, and cryptographic duplicate prevention via nullifiers.
 
