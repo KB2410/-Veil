@@ -1,21 +1,454 @@
 <!doctype html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Veil Feedback — Private by default</title><link rel="stylesheet" href="styles.css"></head>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO Meta -->
+  <title>Veil Feedback — Anonymous Surveys on Midnight</title>
+  <meta name="description"
+    content="Privacy-preserving anonymous feedback system built on Midnight blockchain. Prove eligibility with zero-knowledge proofs — your identity never appears on the public ledger.">
+  <meta name="theme-color" content="#0b0d0b">
+
+  <!-- Fonts & Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+
 <body>
-  <header><a class="brand" href="#top"><span>◐</span> VEIL / FEEDBACK</a><span class="network">● Midnight testnet ready</span></header>
-  <main id="top">
-    <section class="hero"><p class="eyebrow">ANONYMOUS FEEDBACK · SELECTIVE DISCLOSURE</p><h1>Speak freely.<br><i>Prove</i> you belong.</h1><p class="lede">A private survey for verified community members. Your answer and identity never appear on the public ledger.</p><div class="chips"><span>✓ Eligibility proven</span><span>✓ One response only</span><span>✓ Answers encrypted</span></div></section>
-    <section class="grid">
-      <form id="survey" class="card" novalidate>
-        <div class="section-title"><span>01 / PRIVATE INPUT</span><b>Your response</b></div>
-        <label>How useful was this experience?</label><div class="rating" role="radiogroup" aria-label="Rating">
-          <input id="r1" name="rating" type="radio" value="1"><label for="r1">1</label><input id="r2" name="rating" type="radio" value="2"><label for="r2">2</label><input id="r3" name="rating" type="radio" value="3"><label for="r3">3</label><input id="r4" name="rating" type="radio" value="4"><label for="r4">4</label><input id="r5" name="rating" type="radio" value="5"><label for="r5">5</label></div>
-        <label for="response">What should we improve?</label><textarea id="response" maxlength="280" placeholder="Your private response stays encrypted…"></textarea>
-        <div class="section-title second"><span>02 / LOCAL PROOF</span><b>Private credential</b></div>
-        <label for="secret">Credential (never leaves this device)</label><input id="secret" type="password" minlength="12" placeholder="Enter your private credential"><p class="hint">We derive a zero-knowledge proof and one-time nullifier locally.</p>
-        <button type="submit">Create proof & submit <span>→</span></button><p id="status" role="status" aria-live="polite"></p>
-      </form>
-      <aside class="card transparency"><div class="section-title"><span>PUBLIC VIEW</span><b>Survey results</b></div><div class="metric"><strong id="total">0</strong><span>verified responses</span></div><div class="metric"><strong id="average">—</strong><span>average rating</span></div><div class="bars" id="bars"></div><div class="ledger"><span>Public ledger sees</span><code>valid proof · nullifier · tally</code><span>Public ledger never sees</span><code class="private">identity · credential · response</code></div></aside>
+
+  <!-- =============================================
+       HEADER — Sticky with glassmorphism blur
+       ============================================= -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#top" aria-label="Veil Feedback Home">
+        <span class="brand-icon">◐</span>
+        VEIL / FEEDBACK
+      </a>
+      <span class="network-badge">
+        <span class="network-dot" aria-hidden="true"></span>
+        Midnight Testnet
+      </span>
+    </div>
+  </header>
+
+
+  <!-- =============================================
+       MAIN CONTENT
+       ============================================= -->
+  <main id="top" class="page-wrapper">
+
+    <!-- ——— HERO SECTION ——— -->
+    <section class="hero" aria-labelledby="hero-title">
+      <p class="eyebrow">Anonymous Feedback · Zero-Knowledge Proofs</p>
+
+      <h1 id="hero-title" class="hero-title">
+        Speak freely.<br>
+        <em>Prove</em> you belong.
+      </h1>
+
+      <p class="hero-description">
+        A private survey for verified community members. Your answer and identity
+        never appear on the public ledger — only an aggregate tally is visible.
+      </p>
+
+      <div class="feature-chips">
+        <span class="chip">
+          <span class="chip-icon" aria-hidden="true">✓</span>
+          Eligibility proven via ZK
+        </span>
+        <span class="chip">
+          <span class="chip-icon" aria-hidden="true">✓</span>
+          One response per credential
+        </span>
+        <span class="chip">
+          <span class="chip-icon" aria-hidden="true">✓</span>
+          Answers stay encrypted
+        </span>
+        <span class="chip">
+          <span class="chip-icon" aria-hidden="true">✓</span>
+          Aggregate-only statistics
+        </span>
+      </div>
     </section>
-    <section class="privacy"><div><p class="eyebrow">THE PRIVACY MODEL</p><h2>Half light. Half shadow.</h2></div><p>Veil Feedback discloses only the facts a survey needs: a valid member participated, and that member has not responded before. The response remains private to its intended recipient.</p></section>
-  </main><footer>Built for Midnight Level 3 · Anonymous Feedback / Survey</footer><script type="module" src="app.js"></script>
-</body></html>
+
+
+    <!-- ——— MAIN GRID: Form + Results ——— -->
+    <section class="content-grid" aria-label="Survey and results">
+
+      <!-- ===== LEFT: Survey Form Card ===== -->
+      <div class="card" id="survey-card">
+
+        <!-- Step progress indicator -->
+        <div class="step-indicator" aria-label="Form progress">
+          <div class="step-dot active" data-step="0"></div>
+          <div class="step-dot" data-step="1"></div>
+          <div class="step-dot" data-step="2"></div>
+        </div>
+
+        <form id="survey-form" novalidate autocomplete="off">
+
+          <!-- ——— STEP 1: Rating ——— -->
+          <div class="form-step active" data-step="0">
+            <div class="step-header">
+              <p class="eyebrow">Step 01 / Private Input</p>
+              <h3>Rate your experience</h3>
+              <p>Your individual rating remains private — only aggregate totals are published.</p>
+            </div>
+
+            <label class="form-label">How useful was this experience?</label>
+
+            <div class="rating-group" role="radiogroup" aria-label="Rating selection">
+              <input type="radio" id="r1" name="rating" value="1">
+              <label for="r1" class="rating-label">1</label>
+              <input type="radio" id="r2" name="rating" value="2">
+              <label for="r2" class="rating-label">2</label>
+              <input type="radio" id="r3" name="rating" value="3">
+              <label for="r3" class="rating-label">3</label>
+              <input type="radio" id="r4" name="rating" value="4">
+              <label for="r4" class="rating-label">4</label>
+              <input type="radio" id="r5" name="rating" value="5">
+              <label for="r5" class="rating-label">5</label>
+            </div>
+            <div class="rating-desc">
+              <span>Not useful</span>
+              <span>Very useful</span>
+            </div>
+
+            <div class="btn-group">
+              <button type="button" class="btn btn-primary" id="btn-next-1">
+                Continue
+                <span class="btn-icon" aria-hidden="true">→</span>
+              </button>
+            </div>
+          </div>
+
+
+          <!-- ——— STEP 2: Feedback Text ——— -->
+          <div class="form-step" data-step="1">
+            <div class="step-header">
+              <p class="eyebrow">Step 02 / Private Input</p>
+              <h3>Share your feedback</h3>
+              <p>Your response is encrypted — only the intended recipient can read it.</p>
+            </div>
+
+            <label class="form-label" for="response-input">What should we improve?</label>
+            <textarea
+              id="response-input"
+              class="text-area"
+              maxlength="280"
+              placeholder="Your private response stays encrypted and never appears on-chain…"
+            ></textarea>
+            <div class="char-count">
+              <span id="char-current">0</span> / 280
+            </div>
+
+            <div class="btn-group">
+              <button type="button" class="btn btn-secondary" id="btn-back-2">
+                <span class="btn-icon" aria-hidden="true">←</span>
+                Back
+              </button>
+              <button type="button" class="btn btn-primary" id="btn-next-2">
+                Continue
+                <span class="btn-icon" aria-hidden="true">→</span>
+              </button>
+            </div>
+          </div>
+
+
+          <!-- ——— STEP 3: Credential & Submit ——— -->
+          <div class="form-step" data-step="2">
+            <div class="step-header">
+              <p class="eyebrow">Step 03 / Local Proof</p>
+              <h3>Private credential</h3>
+              <p>We derive a zero-knowledge proof and one-time nullifier entirely on your device.</p>
+            </div>
+
+            <label class="form-label" for="credential-input">Your credential (never leaves this device)</label>
+            <div class="credential-wrapper">
+              <input
+                type="password"
+                id="credential-input"
+                class="text-input"
+                minlength="12"
+                placeholder="Enter your private credential"
+                autocomplete="off"
+              >
+              <span class="lock" aria-hidden="true">🔒</span>
+            </div>
+
+            <div class="strength-bar" aria-label="Credential strength">
+              <div class="strength-fill" id="strength-fill"></div>
+            </div>
+            <p class="form-hint">
+              <span class="lock-icon" aria-hidden="true">🛡</span>
+              Minimum 12 characters. Used only to generate a proof — never transmitted.
+            </p>
+
+            <div class="btn-group">
+              <button type="button" class="btn btn-secondary" id="btn-back-3">
+                <span class="btn-icon" aria-hidden="true">←</span>
+                Back
+              </button>
+              <button type="submit" class="btn btn-primary" id="submit-btn">
+                Create proof & submit
+                <span class="btn-icon" aria-hidden="true">→</span>
+              </button>
+            </div>
+
+            <p id="form-status" class="status-msg" role="status" aria-live="polite"></p>
+          </div>
+
+        </form>
+
+
+        <!-- ——— PROOF GENERATION OVERLAY ——— -->
+        <div class="form-step" data-step="proving" id="proving-step">
+          <div class="proof-visualizer">
+            <div class="proof-animation" aria-label="Generating proof">
+              <div class="proof-ring"></div>
+              <div class="proof-ring"></div>
+              <div class="proof-ring"></div>
+              <div class="proof-center">◐</div>
+            </div>
+            <p class="proof-status-text">Generating zero-knowledge proof…</p>
+            <p class="proof-sub-text">Your credential never leaves this device</p>
+          </div>
+
+          <div class="proof-steps" id="proof-steps">
+            <div class="proof-step pending" data-proof="hash">
+              <span class="proof-step-icon">○</span>
+              <span>Deriving membership commitment</span>
+            </div>
+            <div class="proof-step pending" data-proof="nullifier">
+              <span class="proof-step-icon">○</span>
+              <span>Computing survey-scoped nullifier</span>
+            </div>
+            <div class="proof-step pending" data-proof="verify">
+              <span class="proof-step-icon">○</span>
+              <span>Verifying eligibility proof</span>
+            </div>
+            <div class="proof-step pending" data-proof="submit">
+              <span class="proof-step-icon">○</span>
+              <span>Submitting to contract</span>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- ——— SUCCESS STATE ——— -->
+        <div class="form-step" data-step="success" id="success-step">
+          <div class="success-state">
+            <div class="success-icon" aria-hidden="true">✓</div>
+            <h3>Proof verified</h3>
+            <p>Your private feedback has been submitted. Only the aggregate tally was updated on the public ledger.</p>
+
+            <div class="proof-receipt" id="proof-receipt">
+              <div class="receipt-row">
+                <span class="receipt-label">Nullifier</span>
+                <span class="receipt-value" id="receipt-nullifier">—</span>
+              </div>
+              <div class="receipt-row">
+                <span class="receipt-label">Proof hash</span>
+                <span class="receipt-value" id="receipt-proof">—</span>
+              </div>
+              <div class="receipt-row">
+                <span class="receipt-label">Timestamp</span>
+                <span class="receipt-value" id="receipt-time">—</span>
+              </div>
+            </div>
+
+            <div class="btn-group" style="margin-top: var(--space-xl);">
+              <button type="button" class="btn btn-primary" id="btn-new-submission">
+                Submit another response
+                <span class="btn-icon" aria-hidden="true">→</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+      <!-- ===== RIGHT: Results Dashboard ===== -->
+      <aside class="card results-card" aria-label="Survey results">
+        <div class="section-label">
+          <span class="step-number">Public View</span>
+          <span class="step-title">Survey Results</span>
+        </div>
+
+        <!-- Metrics -->
+        <div class="metric-block">
+          <strong class="metric-value" id="metric-total">0</strong>
+          <span class="metric-label">verified responses</span>
+        </div>
+
+        <div class="metric-block">
+          <strong class="metric-value" id="metric-average">—</strong>
+          <span class="metric-label">average rating</span>
+        </div>
+
+        <!-- Bar chart -->
+        <div class="bar-chart" id="bar-chart" aria-label="Rating distribution">
+          <!-- Rendered by JS -->
+        </div>
+
+        <!-- Ledger transparency info -->
+        <div class="ledger-info">
+          <div class="ledger-row">
+            <span class="ledger-label">Public ledger sees</span>
+            <span class="ledger-value">valid proof · nullifier · tally</span>
+          </div>
+          <div class="ledger-row">
+            <span class="ledger-label">Public ledger never sees</span>
+            <span class="ledger-value private">identity · credential · response</span>
+          </div>
+        </div>
+      </aside>
+
+    </section>
+
+
+    <!-- ——— TRANSACTION LOG ——— -->
+    <section class="tx-log-section" aria-label="Proof submission history">
+      <div class="tx-log-header">
+        <h2>Proof History</h2>
+        <span class="tx-log-count" id="tx-count">0 proofs</span>
+      </div>
+      <div id="tx-log">
+        <div class="tx-log-empty">
+          <div class="empty-icon" aria-hidden="true">◐</div>
+          <p>No proofs submitted yet. Submit feedback above to see your proof history.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ——— PRIVACY MODEL SECTION ——— -->
+    <section class="privacy-section" aria-labelledby="privacy-heading">
+      <div class="privacy-grid">
+
+        <div class="privacy-intro">
+          <p class="eyebrow">The Privacy Model</p>
+          <h2 id="privacy-heading">Half light.<br><em>Half shadow.</em></h2>
+          <p>
+            Veil Feedback discloses only the facts a survey needs: a valid member
+            participated, and that member has not responded before. The response
+            remains private to its intended recipient. Midnight's selective-disclosure
+            model makes this possible without trusted intermediaries.
+          </p>
+        </div>
+
+        <div class="privacy-cards">
+
+          <!-- Public data card -->
+          <div class="privacy-card public">
+            <div class="privacy-card-header">
+              <span class="privacy-card-icon" aria-hidden="true">👁</span>
+              Visible on-chain
+            </div>
+            <div class="privacy-items">
+              <div class="privacy-item">
+                <span class="privacy-item-dot" aria-hidden="true"></span>
+                A valid credential participated
+              </div>
+              <div class="privacy-item">
+                <span class="privacy-item-dot" aria-hidden="true"></span>
+                One-time nullifier (prevents duplicates)
+              </div>
+              <div class="privacy-item">
+                <span class="privacy-item-dot" aria-hidden="true"></span>
+                Aggregate survey totals (count, average)
+              </div>
+            </div>
+          </div>
+
+          <!-- Private data card -->
+          <div class="privacy-card private">
+            <div class="privacy-card-header">
+              <span class="privacy-card-icon" aria-hidden="true">🔒</span>
+              Never visible on-chain
+            </div>
+            <div class="privacy-items">
+              <div class="privacy-item">
+                <span class="privacy-item-dot" aria-hidden="true"></span>
+                Participant's wallet or identity
+              </div>
+              <div class="privacy-item">
+                <span class="privacy-item-dot" aria-hidden="true"></span>
+                The secret credential itself
+              </div>
+              <div class="privacy-item">
+                <span class="privacy-item-dot" aria-hidden="true"></span>
+                Individual feedback response or rating
+              </div>
+              <div class="privacy-item">
+                <span class="privacy-item-dot" aria-hidden="true"></span>
+                Which member produced a particular answer
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ——— ARCHITECTURE FLOW ——— -->
+    <section class="architecture-section" aria-labelledby="arch-heading">
+      <p class="eyebrow">How It Works</p>
+      <h2 id="arch-heading">Privacy-preserving flow</h2>
+
+      <div class="flow-diagram">
+        <div class="flow-node">
+          <div class="flow-node-icon" aria-hidden="true">🔑</div>
+          <h4>1. Local Proof</h4>
+          <p>Your secret credential generates a ZK proof and survey-scoped nullifier entirely on your device.</p>
+        </div>
+
+        <div class="flow-node">
+          <div class="flow-node-icon" aria-hidden="true">🛡</div>
+          <h4>2. Contract Verification</h4>
+          <p>The Midnight contract verifies the proof, checks the nullifier hasn't been used, and rejects duplicates.</p>
+        </div>
+
+        <div class="flow-node">
+          <div class="flow-node-icon" aria-hidden="true">📊</div>
+          <h4>3. Aggregate Only</h4>
+          <p>Only the aggregate tally is updated on-chain. Your identity and response remain completely private.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- =============================================
+       FOOTER
+       ============================================= -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span class="footer-text">Built for Midnight Level 3 · Anonymous Feedback & Survey</span>
+      <div class="footer-links">
+        <a href="https://github.com/KB2410/-Veil" class="footer-link" target="_blank" rel="noopener">GitHub</a>
+        <a href="PROPOSAL.md" class="footer-link">Proposal</a>
+        <a href="contracts/veil_feedback.compact" class="footer-link">Contract</a>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- =============================================
+       TOAST CONTAINER
+       ============================================= -->
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+
+  <!-- =============================================
+       SCRIPTS
+       ============================================= -->
+  <script type="module" src="app.js"></script>
+
+</body>
+</html>
