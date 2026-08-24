@@ -6,7 +6,13 @@
 
 ## Live Demo
 
-🚀 **[https://veil-agajn16kj-kb2410s-projects.vercel.app/](https://veil-agajn16kj-kb2410s-projects.vercel.app/)**
+🚀 **[https://veil-three-opal.vercel.app/](https://veil-three-opal.vercel.app/)**
+
+## Demo Video
+
+![Veil Feedback Demo](assets/demo.webp)
+
+> **Walkthrough:** 1-minute end-to-end demo showing private feedback submission, animated zero-knowledge proof derivation, on-chain aggregate tally update, and cryptographic duplicate prevention via nullifiers.
 
 ## Contract Address
 
