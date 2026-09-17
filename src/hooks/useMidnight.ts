@@ -234,6 +234,7 @@ export function useMidnight() {
           compiledContract,
           contractAddress,
           circuitId: 'addEligibleCredential',
+          args: [1n],
         } as never);
         setLastTxId(call.public.txId);
         setProofProgress({ step: 'confirmed', message: 'Credential commitment registered on Midnight Preprod.' });

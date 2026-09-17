@@ -54,8 +54,12 @@ export circuit addEligible(commitment: Bytes<32>): [] {
 
 // Demo issuer flow: derive and register a participant's commitment inside the
 // circuit. Only the commitment is persisted; the credential remains a witness.
-export circuit addEligibleCredential(): [] {
+// The nonce is a harmless public call input. Keeping a concrete input avoids
+// empty-input proving incompatibilities in some DApp Connector wallets; the
+// credential itself remains a private witness.
+export circuit addEligibleCredential(nonce: Uint<16>): [] {
   assert(dappPublicKey(localSecret()) == organizer, "Only the issuer can add credentials");
+  assert(nonce < 65536, "Invalid registration nonce");
   const commitment = disclose(credentialCommitment(credential()));
   assert(!eligibleCommitments.member(commitment), "Credential is already eligible");
   eligibleCommitments.insert(commitment);

@@ -27,6 +27,13 @@
       "pure": false,
       "proof": true,
       "arguments": [
+        {
+          "name": "nonce",
+          "type": {
+            "type-name": "Uint",
+            "maxval": 65535
+          }
+        }
       ],
       "result-type": {
         "type-name": "Tuple",

@@ -8,7 +8,8 @@ export type Witnesses<PS> = {
 export type ImpureCircuits<PS> = {
   addEligible(context: __compactRuntime.CircuitContext<PS>,
               commitment_0: Uint8Array): __compactRuntime.CircuitResults<PS, []>;
-  addEligibleCredential(context: __compactRuntime.CircuitContext<PS>): __compactRuntime.CircuitResults<PS, []>;
+  addEligibleCredential(context: __compactRuntime.CircuitContext<PS>,
+                        nonce_0: bigint): __compactRuntime.CircuitResults<PS, []>;
   closeSurvey(context: __compactRuntime.CircuitContext<PS>): __compactRuntime.CircuitResults<PS, []>;
   submit(context: __compactRuntime.CircuitContext<PS>, rating_0: bigint): __compactRuntime.CircuitResults<PS, []>;
   getTallies(context: __compactRuntime.CircuitContext<PS>): __compactRuntime.CircuitResults<PS, bigint[]>;
@@ -17,7 +18,8 @@ export type ImpureCircuits<PS> = {
 export type ProvableCircuits<PS> = {
   addEligible(context: __compactRuntime.CircuitContext<PS>,
               commitment_0: Uint8Array): __compactRuntime.CircuitResults<PS, []>;
-  addEligibleCredential(context: __compactRuntime.CircuitContext<PS>): __compactRuntime.CircuitResults<PS, []>;
+  addEligibleCredential(context: __compactRuntime.CircuitContext<PS>,
+                        nonce_0: bigint): __compactRuntime.CircuitResults<PS, []>;
   closeSurvey(context: __compactRuntime.CircuitContext<PS>): __compactRuntime.CircuitResults<PS, []>;
   submit(context: __compactRuntime.CircuitContext<PS>, rating_0: bigint): __compactRuntime.CircuitResults<PS, []>;
   getTallies(context: __compactRuntime.CircuitContext<PS>): __compactRuntime.CircuitResults<PS, bigint[]>;
@@ -29,7 +31,8 @@ export type PureCircuits = {
 export type Circuits<PS> = {
   addEligible(context: __compactRuntime.CircuitContext<PS>,
               commitment_0: Uint8Array): __compactRuntime.CircuitResults<PS, []>;
-  addEligibleCredential(context: __compactRuntime.CircuitContext<PS>): __compactRuntime.CircuitResults<PS, []>;
+  addEligibleCredential(context: __compactRuntime.CircuitContext<PS>,
+                        nonce_0: bigint): __compactRuntime.CircuitResults<PS, []>;
   closeSurvey(context: __compactRuntime.CircuitContext<PS>): __compactRuntime.CircuitResults<PS, []>;
   submit(context: __compactRuntime.CircuitContext<PS>, rating_0: bigint): __compactRuntime.CircuitResults<PS, []>;
   getTallies(context: __compactRuntime.CircuitContext<PS>): __compactRuntime.CircuitResults<PS, bigint[]>;

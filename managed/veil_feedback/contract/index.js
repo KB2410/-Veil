@@ -106,25 +106,38 @@ export class Contract {
         return { result: result_0, context: context, proofData: partialProofData, gasCost: context.gasCost };
       },
       addEligibleCredential: (...args_1) => {
-        if (args_1.length !== 1) {
-          throw new __compactRuntime.CompactError(`addEligibleCredential: expected 1 argument (as invoked from Typescript), received ${args_1.length}`);
+        if (args_1.length !== 2) {
+          throw new __compactRuntime.CompactError(`addEligibleCredential: expected 2 arguments (as invoked from Typescript), received ${args_1.length}`);
         }
         const contextOrig_0 = args_1[0];
+        const nonce_0 = args_1[1];
         if (!(typeof(contextOrig_0) === 'object' && contextOrig_0.currentQueryContext != undefined)) {
           __compactRuntime.typeError('addEligibleCredential',
                                      'argument 1 (as invoked from Typescript)',
-                                     'veil_feedback.compact line 57 char 1',
+                                     'veil_feedback.compact line 60 char 1',
                                      'CircuitContext',
                                      contextOrig_0)
         }
+        if (!(typeof(nonce_0) === 'bigint' && nonce_0 >= 0n && nonce_0 <= 65535n)) {
+          __compactRuntime.typeError('addEligibleCredential',
+                                     'argument 1 (argument 2 as invoked from Typescript)',
+                                     'veil_feedback.compact line 60 char 1',
+                                     'Uint<0..65536>',
+                                     nonce_0)
+        }
         const context = { ...contextOrig_0, gasCost: __compactRuntime.emptyRunningCost() };
         const partialProofData = {
-          input: { value: [], alignment: [] },
+          input: {
+            value: _descriptor_1.toValue(nonce_0),
+            alignment: _descriptor_1.alignment()
+          },
           output: undefined,
           publicTranscript: [],
           privateTranscriptOutputs: []
         };
-        const result_0 = this._addEligibleCredential_0(context, partialProofData);
+        const result_0 = this._addEligibleCredential_0(context,
+                                                       partialProofData,
+                                                       nonce_0);
         partialProofData.output = { value: [], alignment: [] };
         return { result: result_0, context: context, proofData: partialProofData, gasCost: context.gasCost };
       },
@@ -136,7 +149,7 @@ export class Contract {
         if (!(typeof(contextOrig_0) === 'object' && contextOrig_0.currentQueryContext != undefined)) {
           __compactRuntime.typeError('closeSurvey',
                                      'argument 1 (as invoked from Typescript)',
-                                     'veil_feedback.compact line 64 char 1',
+                                     'veil_feedback.compact line 68 char 1',
                                      'CircuitContext',
                                      contextOrig_0)
         }
@@ -160,14 +173,14 @@ export class Contract {
         if (!(typeof(contextOrig_0) === 'object' && contextOrig_0.currentQueryContext != undefined)) {
           __compactRuntime.typeError('submit',
                                      'argument 1 (as invoked from Typescript)',
-                                     'veil_feedback.compact line 70 char 1',
+                                     'veil_feedback.compact line 74 char 1',
                                      'CircuitContext',
                                      contextOrig_0)
         }
         if (!(typeof(rating_0) === 'bigint' && rating_0 >= 0n && rating_0 <= 65535n)) {
           __compactRuntime.typeError('submit',
                                      'argument 1 (argument 2 as invoked from Typescript)',
-                                     'veil_feedback.compact line 70 char 1',
+                                     'veil_feedback.compact line 74 char 1',
                                      'Uint<0..65536>',
                                      rating_0)
         }
@@ -193,7 +206,7 @@ export class Contract {
         if (!(typeof(contextOrig_0) === 'object' && contextOrig_0.currentQueryContext != undefined)) {
           __compactRuntime.typeError('getTallies',
                                      'argument 1 (as invoked from Typescript)',
-                                     'veil_feedback.compact line 89 char 1',
+                                     'veil_feedback.compact line 93 char 1',
                                      'CircuitContext',
                                      contextOrig_0)
         }
@@ -475,7 +488,7 @@ export class Contract {
                                        { ins: { cached: true, n: 1 } }]);
     return [];
   }
-  _addEligibleCredential_0(context, partialProofData) {
+  _addEligibleCredential_0(context, partialProofData, nonce_0) {
     __compactRuntime.assert(this._equal_1(this._dappPublicKey_0(this._localSecret_0(context,
                                                                                     partialProofData)),
                                           _descriptor_0.fromValue(__compactRuntime.queryLedgerState(context,
@@ -491,6 +504,7 @@ export class Contract {
                                                                                                      { popeq: { cached: false,
                                                                                                                 result: undefined } }]).value)),
                             'Only the issuer can add credentials');
+    __compactRuntime.assert(nonce_0 < 65536n, 'Invalid registration nonce');
     const commitment_0 = this._credentialCommitment_0(this._credential_0(context,
                                                                          partialProofData));
     __compactRuntime.assert(!_descriptor_2.fromValue(__compactRuntime.queryLedgerState(context,
