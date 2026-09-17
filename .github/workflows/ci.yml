@@ -2,21 +2,32 @@ name: CI
 
 on:
   push:
+    branches: [ main ]
   pull_request:
-
-permissions:
-  contents: read
+    branches: [ main ]
 
 jobs:
-  test:
-    name: Test and smoke-check
+  build-and-test:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js v22
+        uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npm test
-      - run: node --check src/protocol.js
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci || npm install
+
+      - name: Verify & Compile Compact Contract
+        run: npm run compact:compile
+
+      - name: Run Test Suite (7 Passing ZK Tests)
+        run: npm test
+
+      - name: Build Frontend Application
+        run: npm run build

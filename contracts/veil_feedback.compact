@@ -2,8 +2,30 @@ pragma language_version 0.23;
 
 import CompactStandardLibrary;
 
-// Veil Feedback: anonymous, one-response-per-credential survey.
-// Credentials remain witnesses; only commitments, nullifiers and aggregates are persistent.
+/**
+ * ============================================================================
+ * PRIVACY MODEL & ZERO-KNOWLEDGE SPECIFICATION: VEIL FEEDBACK
+ * ============================================================================
+ *
+ * 1. PUBLIC LEDGER STATE (on-chain, verifiable by all observers):
+ *    - `organizer`: Public commitment hash of the organizer/deployer.
+ *    - `surveyOpen`: Boolean status flag indicating if the survey accepts submissions.
+ *    - `eligibleCommitments`: Merkle / Set accumulator of blinded membership commitments.
+ *    - `usedNullifiers`: Set of deterministic nullifiers enforcing one-response-per-member.
+ *    - `ratingOne` ... `ratingFive`: Aggregate public counters for 1 to 5 star ratings.
+ *
+ * 2. PRIVATE WITNESS STATE (client-side only, never leaves user's local runtime):
+ *    - `localSecret()`: Private key / entropy of the organizer or voter.
+ *    - `credential()`: Private membership secret of the survey respondent.
+ *    - `rating`: Private numerical score (1-5) submitted by the respondent.
+ *
+ * 3. SELECTIVE DISCLOSURE & PROOFS:
+ *    - `credentialCommitment`: Blinded hash proving set membership without disclosing identity.
+ *    - `surveyNullifier`: Scoped nullifier preventing Sybil/double submission.
+ *    - `disclose(rating)`: Disclosed only within circuit execution to increment the corresponding
+ *      aggregate public counter without linking back to respondent identity.
+ * ============================================================================
+ */
 
 export sealed ledger organizer: Bytes<32>;
 export ledger surveyOpen: Boolean;
@@ -28,6 +50,15 @@ export circuit addEligible(commitment: Bytes<32>): [] {
   assert(dappPublicKey(localSecret()) == organizer, "Only the issuer can add credentials");
   assert(!eligibleCommitments.member(disclose(commitment)), "Credential is already eligible");
   eligibleCommitments.insert(disclose(commitment));
+}
+
+// Demo issuer flow: derive and register a participant's commitment inside the
+// circuit. Only the commitment is persisted; the credential remains a witness.
+export circuit addEligibleCredential(): [] {
+  assert(dappPublicKey(localSecret()) == organizer, "Only the issuer can add credentials");
+  const commitment = disclose(credentialCommitment(credential()));
+  assert(!eligibleCommitments.member(commitment), "Credential is already eligible");
+  eligibleCommitments.insert(commitment);
 }
 
 export circuit closeSurvey(): [] {

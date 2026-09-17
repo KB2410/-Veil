@@ -1,161 +1,71 @@
-# Veil Feedback ◐
+# Veil Feedback
 
-[![CI](https://github.com/KB2410/-Veil/actions/workflows/ci.yml/badge.svg)](../../actions/workflows/ci.yml)
+[![CI](https://github.com/KB2410/-Veil/actions/workflows/ci.yml/badge.svg)](https://github.com/KB2410/-Veil/actions/workflows/ci.yml)
 
-> Anonymous, eligibility-gated feedback with zero-knowledge proofs — your identity never appears on the public ledger.
+Privacy-preserving, eligibility-gated community feedback designed for Midnight. Participants prove eligibility and one-response-per-credential without disclosing their identity.
 
-## Live Demo
+## Launch status
 
-🚀 **[https://veil-three-opal.vercel.app/](https://veil-three-opal.vercel.app/)**
+| Item | Status |
+| --- | --- |
+| Interactive product demo | [Live on Vercel](https://veil-three-opal.vercel.app/) |
+| Compact contract | Source and generated artifacts included; CI compiles it |
+| Midnight Preprod deployment | [Verified contract on Night Scan](https://explorer.preprod.midnight.network/contracts/stream/9337d72914185396143c200042949f346e0afb4e2b8b54cf4e89637930186254) |
+| Product X profile | **Pending** — add its public URL below after creating it |
 
-## Demo Video
+The browser connects to a Midnight DApp Connector wallet on Preprod and uses the generated Compact proving assets. The deployment is verifiable on-chain; credential registration and response calls are being completed against this live contract.
 
-![Veil Feedback Demo](assets/veil_demo_video.webp)
+## Preprod contract
 
-> **Walkthrough:** 1-minute end-to-end demo showing private feedback submission, animated zero-knowledge proof derivation, on-chain aggregate tally update, and cryptographic duplicate prevention via nullifiers.
+**Address:** `9337d72914185396143c200042949f346e0afb4e2b8b54cf4e89637930186254`
 
-## Contract Address
+**Explorer:** [Night Scan contract record](https://explorer.preprod.midnight.network/contracts/stream/9337d72914185396143c200042949f346e0afb4e2b8b54cf4e89637930186254)
 
-| Network  | Address                          |
-|----------|----------------------------------|
-| Preprod  | 0x518a3fbf7cd32405e5eccbc52e612bf7bcb428ca4e29574d5209fd554ea45b8f |
+**Deployment transaction:** `3bb261ab3af7daf93f16e7698367d4becdda45da181d6bc6ec4f71105e86691c` (block `2584350`, status `SUCCESS`).
 
-## What This Does
+Follow the full evidence-first process in [docs/PREPROD-LAUNCH.md](docs/PREPROD-LAUNCH.md).
 
-Veil Feedback is an anonymous survey system built on Midnight's selective-disclosure model. Community members prove they're eligible and submit feedback without revealing their identity. A participant proves they are eligible and have not answered before without publicly linking their identity to a response.
+## Product X profile
 
-**Key Features:**
-- Anonymous feedback submission with zero-knowledge proofs
-- One response per credential (enforced via nullifiers)
-- Aggregate-only statistics published
-- Privacy-preserving duplicate prevention
+Create the product account, publish an initial build-in-public post, then replace this placeholder with its public URL: `<YOUR_X_PROFILE_URL>`.
 
-## Privacy Model
+## What is public and private
 
-- **PUBLIC:** Valid proof submitted, one-time nullifier used, aggregate survey totals
-- **PRIVATE:** Participant's wallet, identity, credential, individual feedback responses
-- **PROVED without revealing:** Membership eligibility, no duplicate submission, valid rating range
+Public contract state contains aggregate rating counters, the survey status, blinded membership commitments, and nullifiers used to prevent duplicate responses. Private witnesses contain the respondent credential, rating, identity, and organizer secret. The circuit proves eligibility, a unique response, and a valid rating without revealing the credential.
 
-## Privacy Claim
+## Local setup
 
-**What an on-chain observer sees:**
-- A valid credential participated
-- A one-time nullifier has not been used in this survey
-- Aggregate survey totals (count, average, distribution)
+Prerequisites: Node.js 22+, a compatible Compact toolchain, and Docker only if your Compact setup requires it.
 
-**What an on-chain observer cannot see:**
-- The participant's wallet, identity, or credential
-- The feedback response or rating tied to a participant
-- Which member produced a particular answer
-
-## Tech Stack
-
-- **Smart Contract:** Compact (Midnight blockchain)
-- **Frontend:** Vanilla JavaScript (ES Modules)
-- **Runtime:** Node.js 20+
-- **Test Framework:** Node.js native test runner
-- **CI/CD:** GitHub Actions
-- **Deployment:** Static hosting (Netlify/Vercel/GitHub Pages)
-
-## Prerequisites
-
-- Node.js 20 or higher
-- npm or yarn package manager
-- (Optional) Midnight toolchain for contract compilation
-
-## Setup & Run Locally
-
-1. Clone the repository:
 ```bash
 git clone https://github.com/KB2410/-Veil.git
-cd midnight-lvl3
-```
-
-2. Install dependencies:
-```bash
+cd -Veil
 npm ci
-```
-
-3. Start the development server:
-```bash
+npm run compact:compile
+npm test
 npm run dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
+For a deployed frontend, copy `.env.example` to `.env.local`, add only the real explorer-verified contract address, then run `npm run build`.
 
-5. Try the demo:
-   - Enter a private credential (minimum 12 characters)
-   - Select a rating and provide feedback
-   - Submit to see the proof generation
-   - Try reusing the same credential to see duplicate prevention
+## Commands
 
-## Run Tests
+| Command | Purpose |
+| --- | --- |
+| `npm run compact:compile` | Compile `contracts/veil_feedback.compact`; fails if compilation fails. |
+| `npm test` | Run the seven protocol tests. |
+| `npm run build` | Type-check and build the Vite frontend. |
+| `npm run deploy:prepare` | Print the safe Preprod deployment readiness checklist. |
 
-```bash
-npm test
-```
+## Documentation
 
-The test suite includes 4 comprehensive tests covering:
-- Circuit logic (nullifier generation)
-- State transitions (duplicate prevention)
-- Privacy guarantees (aggregate-only output)
+- [Usage guide](docs/USAGE.md)
+- [Preprod launch runbook](docs/PREPROD-LAUNCH.md)
+- [Contract notes](contracts/README.md)
+- [Product proposal](PROPOSAL.md)
 
-All tests validate the privacy-preserving protocol without requiring Midnight testnet access.
+## Demo video
 
-## CI/CD
+![Veil Feedback demo](assets/veil_demo_video.webp)
 
-The project uses GitHub Actions for continuous integration:
-- **Trigger:** Runs on every `push` and `pull_request`
-- **Node Version:** 22 (LTS)
-- **Steps:**
-  1. Checkout code
-  2. Install Node.js with npm cache
-  3. Install dependencies (`npm ci`)
-  4. Run test suite (`npm test`)
-  5. Syntax validation (`node --check src/protocol.js`)
-
-The CI badge at the top shows real-time build status.
-
-## Product Proposal
-
-See [PROPOSAL.md](PROPOSAL.md) for the complete product proposal including:
-- Target users and use cases
-- Why Midnight specifically
-- Data model and privacy guarantees
-- Mainnet feasibility assessment
-
-## Architecture
-
-The production flow has three pieces:
-
-1. The issuer adds credential commitments to the private Midnight state.
-2. The participant's Compact circuit proves membership and creates a survey-specific nullifier. The secret credential remains client-side.
-3. The contract verifies the proof, rejects a reused nullifier, and releases only an aggregate tally. Encrypted response data is readable only by its intended recipient.
-
-```text
-private credential ──local witness/proof──> Midnight contract
-        │                                       │
-        └─ never leaves device                  ├─ used nullifier (public)
-                                                └─ aggregate tally (public)
-encrypted feedback ───────────────────────────> intended recipient only
-```
-
-### Current Implementation
-
-This repository ships a browser-executable protocol simulator so the full interaction can be tried without a testnet account. The matching Compact source is included in [`contracts/veil_feedback.compact`](contracts/veil_feedback.compact): it uses private credential witnesses, one-way membership commitments, survey-scoped nullifiers, and aggregate counters. 
-
-Install the Midnight toolchain, compile it, and connect its generated client to replace the local adapter before deployment. The public data shape and verification rules are already isolated and tested.
-
-## Submission Checklist
-
-- [ ] Add your public repository URL and replace the CI badge owner
-- [ ] Add the deployed live-demo URL
-- [ ] Add your Preprod contract address
-- [ ] Capture `npm test` output (4 passing tests)
-- [ ] Record a one-minute demo: submit once, show results, then show duplicate rejection
-- [ ] Fill in PROPOSAL.md with your answers
-- [ ] Push at least ten meaningful commits
-
-## License
-
-MIT
+Before submitting, also upload the video to a public service and link it here so reviewers can play it outside GitHub's image viewer.
