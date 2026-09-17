@@ -11,7 +11,7 @@ Privacy-preserving, eligibility-gated community feedback designed for Midnight. 
 | Interactive product demo | [Live on Vercel](https://veil-three-opal.vercel.app/) |
 | Compact contract | Source and generated artifacts included; CI compiles it |
 | Midnight Preprod deployment | [Verified contract on Night Scan](https://explorer.preprod.midnight.network/contracts/stream/9337d72914185396143c200042949f346e0afb4e2b8b54cf4e89637930186254) |
-| Product X profile | **Pending** — add its public URL below after creating it |
+| Product X profile | [@KartikB2410](https://x.com/KartikB2410) |
 
 The browser connects to a Midnight DApp Connector wallet on Preprod and uses the generated Compact proving assets. The deployment is verifiable on-chain; credential registration and response calls are being completed against this live contract.
 
@@ -27,7 +27,7 @@ Follow the full evidence-first process in [docs/PREPROD-LAUNCH.md](docs/PREPROD-
 
 ## Product X profile
 
-Create the product account, publish an initial build-in-public post, then replace this placeholder with its public URL: `<YOUR_X_PROFILE_URL>`.
+[Follow Veil Feedback's build in public updates on X](https://x.com/KartikB2410). The initial Preprod launch announcement is [available here](https://x.com/KartikB2410/status/2100556745261400360?s=20).
 
 ## What is public and private
 
