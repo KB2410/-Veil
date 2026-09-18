@@ -105,7 +105,7 @@ export const Layout: React.FC<LayoutProps> = ({
                   <>
                     <span>•</span>
                     <a
-                      href={`${MIDNIGHT_CONFIG.explorerUri}/contract/${contractAddress}`}
+                      href={`${MIDNIGHT_CONFIG.explorerUri}/${contractAddress}`}
                       target="_blank"
                       rel="noreferrer"
                       className="text-cyan-400 hover:underline flex items-center gap-0.5"
@@ -120,14 +120,14 @@ export const Layout: React.FC<LayoutProps> = ({
           </div>
 
           <div className="flex items-center gap-2 self-end md:self-auto">
-            {!hasContractAddress && isConnected && (
+            {isConnected && (
               <button
                 type="button"
                 onClick={() => void onDeployContract()}
                 className="text-xs px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white border border-indigo-400/50 transition flex items-center gap-1.5"
               >
                 <Rocket className="w-3 h-3" />
-                Deploy to Preprod
+                {hasContractAddress ? 'Deploy replacement' : 'Deploy to Preprod'}
               </button>
             )}
             <a
