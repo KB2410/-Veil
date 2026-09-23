@@ -1,6 +1,11 @@
 /**
  * Midnight Contract Interaction Helpers and Cryptographic Utilities for Veil Feedback
  */
+import {
+  CompactTypeBytes,
+  CompactTypeVector,
+  persistentHash as compactPersistentHash,
+} from '@midnight-ntwrk/compact-runtime';
 
 const viteEnv = (import.meta as ImportMeta & { env?: Record<string, string | undefined> }).env;
 
@@ -63,6 +68,21 @@ export function persistentHashSync(prefix: string, secret: string): string {
  */
 export async function deriveCommitment(secret: string): Promise<string> {
   return persistentHash('veil-feedback:member', secret);
+}
+
+/**
+ * Derive the exact Compact commitment used by the deployed contract.
+ * Browser SHA-256 is used only to make the private credential witness; the
+ * membership commitment itself must use Compact's typed persistentHash.
+ */
+export function deriveCompactMemberCommitment(credentialWitnessHex: string): Uint8Array {
+  const bytes32 = new CompactTypeBytes(32);
+  const input = new CompactTypeVector(2, bytes32);
+  const prefix = new Uint8Array(32);
+  prefix.set(new TextEncoder().encode('veil-feedback:member:'));
+  const witness = fromHex(credentialWitnessHex);
+  if (witness.length !== 32) throw new Error('Credential witness must be 32 bytes.');
+  return compactPersistentHash(input, [prefix, witness]);
 }
 
 /**

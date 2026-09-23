@@ -4,6 +4,7 @@ import {
   MIDNIGHT_CONFIG,
   ProofGenerationStep,
   deriveCommitment,
+  deriveCompactMemberCommitment,
   deriveIssuerPublicKey,
   generateProofAndSubmit,
   persistentHash,
@@ -239,11 +240,15 @@ export function useMidnight() {
         }
         const credentialWitness = await persistentHash('veil-feedback:witness', secretOrCommitment);
         const compiledContract = createVeilContract(organizerWitness(), credentialWitness);
+        const compactCommitment = deriveCompactMemberCommitment(credentialWitness);
         const call = await submitCallTx(providers as never, {
           compiledContract,
           contractAddress,
-          circuitId: 'addEligibleCredential',
-          args: [1n],
+          // `addEligible` is present on the explorer-verified contract. Only
+          // the opaque Compact commitment is disclosed; the credential stays
+          // private in the browser witness.
+          circuitId: 'addEligible',
+          args: [compactCommitment],
         } as never);
         setLastTxId(call.public.txId);
         setProofProgress({ step: 'confirmed', message: 'Credential commitment registered on Midnight Preprod.' });
