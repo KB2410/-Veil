@@ -12,8 +12,8 @@ export const MIDNIGHT_CONFIG = {
   proofServerUri: 'http://localhost:6300', // Standard Midnight client-side proof server
   explorerUri: 'https://explorer.preprod.midnight.network/contracts/stream',
   faucetUri: 'https://faucet.preprod.midnight.network',
-  // This is intentionally empty until a real, explorer-verifiable deployment exists.
-  defaultContractAddress: viteEnv?.VITE_MIDNIGHT_CONTRACT_ADDRESS || '',
+  // Explorer-verified Preprod deployment. An environment variable can override it.
+  defaultContractAddress: viteEnv?.VITE_MIDNIGHT_CONTRACT_ADDRESS || '16a38f11ad60aeac99e26d59f53bb49559984ab2092855e33e764da72d84cc3e',
 };
 
 // Helper to convert string or bytes to hex
