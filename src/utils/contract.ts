@@ -13,7 +13,7 @@ export const MIDNIGHT_CONFIG = {
   explorerUri: 'https://explorer.preprod.midnight.network/contracts/stream',
   faucetUri: 'https://faucet.preprod.midnight.network',
   // Explorer-verified Preprod deployment. An environment variable can override it.
-  defaultContractAddress: viteEnv?.VITE_MIDNIGHT_CONTRACT_ADDRESS || '16a38f11ad60aeac99e26d59f53bb49559984ab2092855e33e764da72d84cc3e',
+  defaultContractAddress: viteEnv?.VITE_MIDNIGHT_CONTRACT_ADDRESS || '9337d72914185396143c200042949f346e0afb4e2b8b54cf4e89637930186254',
 };
 
 // Helper to convert string or bytes to hex

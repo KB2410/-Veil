@@ -22,6 +22,10 @@ export const DEMO_CREDENTIALS = [
 
 export const DEMO_ORGANIZER_SECRET = 'veil-organizer-master-key-2026';
 
+// This is a successful deployment transaction ID, not a contract-state address.
+// Clear the value saved by the earlier UI so the verified default is restored.
+const INVALID_DEPLOYMENT_TRANSACTION_ID = '16a38f11ad60aeac99e26d59f53bb49559984ab2092855e33e764da72d84cc3e';
+
 type ConnectedWalletApi = {
   getShieldedAddresses?: () => Promise<{ shieldedAddress?: string }>;
   getUnshieldedAddress?: () => Promise<{ unshieldedAddress?: string }>;
@@ -38,9 +42,14 @@ export function useMidnight() {
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [walletAddress, setWalletAddress] = useState<string>('');
-  const [contractAddress, setContractAddress] = useState<string>(
-    localStorage.getItem('veil_contract_address') || MIDNIGHT_CONFIG.defaultContractAddress
-  );
+  const [contractAddress, setContractAddress] = useState<string>(() => {
+    const saved = localStorage.getItem('veil_contract_address');
+    if (saved === INVALID_DEPLOYMENT_TRANSACTION_ID) {
+      localStorage.removeItem('veil_contract_address');
+      return MIDNIGHT_CONFIG.defaultContractAddress;
+    }
+    return saved || MIDNIGHT_CONFIG.defaultContractAddress;
+  });
 
   const [ledgerState, setLedgerState] = useState<ContractLedgerState>({
     organizer: '',

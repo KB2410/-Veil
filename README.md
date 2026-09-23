@@ -10,18 +10,18 @@ Privacy-preserving, eligibility-gated community feedback designed for Midnight. 
 | --- | --- |
 | Interactive product demo | [Live on Vercel](https://veil-three-opal.vercel.app/) |
 | Compact contract | Source and generated artifacts included; CI compiles it |
-| Midnight Preprod deployment | [Verified contract on Night Scan](https://explorer.preprod.midnight.network/contracts/stream/16a38f11ad60aeac99e26d59f53bb49559984ab2092855e33e764da72d84cc3e) |
+| Midnight Preprod deployment | [Verified contract on Night Scan](https://explorer.preprod.midnight.network/contracts/stream/9337d72914185396143c200042949f346e0afb4e2b8b54cf4e89637930186254) |
 | Product X profile | [@KartikB2410](https://x.com/KartikB2410) |
 
 The browser connects to a Midnight DApp Connector wallet on Preprod and uses the generated Compact proving assets. The deployment is verifiable on-chain; credential registration and response calls are being completed against this live contract.
 
 ## Preprod contract
 
-**Address:** `16a38f11ad60aeac99e26d59f53bb49559984ab2092855e33e764da72d84cc3e`
+**Address:** `9337d72914185396143c200042949f346e0afb4e2b8b54cf4e89637930186254`
 
-**Explorer:** [Night Scan contract record](https://explorer.preprod.midnight.network/contracts/stream/16a38f11ad60aeac99e26d59f53bb49559984ab2092855e33e764da72d84cc3e)
+**Explorer:** [Night Scan contract record](https://explorer.preprod.midnight.network/contracts/stream/9337d72914185396143c200042949f346e0afb4e2b8b54cf4e89637930186254)
 
-**Deployment transaction:** `16a38f11ad60aeac99e26d59f53bb49559984ab2092855e33e764da72d84cc3e` (block `2673576`, status `SUCCESS`).
+**Deployment transaction:** `3bb261ab3af7daf93f16e7698367d4becdda45da181d6bc6ec4f71105e86691c` (block `2584350`, status `SUCCESS`).
 
 Follow the full evidence-first process in [docs/PREPROD-LAUNCH.md](docs/PREPROD-LAUNCH.md).
 
